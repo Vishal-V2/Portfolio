@@ -76,6 +76,19 @@ export const projectDetails: Record<
       "Microservices architecture behind a Next.js visual editor.",
     ],
   },
+  Chirp: {
+    tagline: "A Twitter/X-style social app with short posts, follows, real-time messages and live notifications.",
+    stack: ["Next.js", "TypeScript", "GraphQL", "PostgreSQL", "Prisma", "Supabase", "Tailwind CSS"],
+    live: "https://chirp-xi-ruddy.vercel.app/",
+    image: "/projects/chirp.jpg",
+    points: [
+      "Full social platform: 280-character chirps with images, GIFs and polls, plus replies, reposts, quote posts, likes, bookmarks, @mentions and #hashtag trends.",
+      "GraphQL API built with GraphQL Yoga and Pothos over Prisma and PostgreSQL. The client uses urql with a normalised Graphcache and optimistic updates.",
+      "Supabase Auth with email/password and Google OAuth, Supabase Storage for avatars and media, and Realtime private channels for 1:1 messages with typing indicators and live notifications.",
+      "Row Level Security on every table, with all reads and writes going through the server-side GraphQL API and uploads scoped to each user's own folder.",
+      "For you, Following and Explore feeds, profile pages with cropped avatars and banners, light and dark themes, and a mobile layout with bars that hide as you scroll.",
+    ],
+  },
   "Intel-X": {
     title: "IntelX",
     tagline: "Security intelligence platform that aggregates 10+ external sources into one risk view.",
@@ -145,4 +158,4 @@ export const projectDetails: Record<
 };
 
 /** The GitHub repos shown in the Projects section, in this order. Add a repo name here to show it. */
-export const featuredRepos = ["FlowGen", "Intel-X", "Threat-X", "Neuralingo", "NullRoute", "Factora", "Disk-Wipe"];
+export const featuredRepos = ["FlowGen", "Chirp", "Intel-X", "Threat-X", "Neuralingo", "NullRoute", "Factora", "Disk-Wipe"];
