@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
 import { LuChevronLeft, LuChevronRight, LuGithub, LuMaximize2 } from "react-icons/lu";
 import type { Project } from "@/lib/github";
 import ProjectCover from "./ProjectCover";
@@ -31,7 +31,8 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
   const n = slots.length;
 
   const [active, setActive] = useState(0);
-  const [opened, setOpened] = useState<Project | null>(null);
+  // the opened project plus the id of the card it came from, so the card can morph into the window
+  const [opened, setOpened] = useState<{ project: Project; id: string } | null>(null);
   const drag = useRef<{ x: number; moved: boolean } | null>(null);
   const suppressClick = useRef(false);
 
@@ -58,13 +59,14 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
 
   function onCardClick(i: number) {
     if (suppressClick.current) return;
-    if (i === active) setOpened(slots[i]);
+    if (i === active) setOpened({ project: slots[i], id: `${slots[i].repo}-${i}` });
     else go(i);
   }
 
   const activeProject = slots[active];
 
   return (
+    <MotionConfig reducedMotion="user">
     <div>
       <div
         role="region"
@@ -74,7 +76,8 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
         onKeyDown={(e) => {
           if (e.key === "ArrowRight") go(active + 1);
           if (e.key === "ArrowLeft") go(active - 1);
-          if (e.key === "Enter" && e.target === e.currentTarget) setOpened(activeProject);
+          if (e.key === "Enter" && e.target === e.currentTarget)
+            setOpened({ project: activeProject, id: `${activeProject.repo}-${active}` });
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -109,6 +112,7 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
               <ProjectCard
                 project={p}
                 active={d === 0}
+                layoutKey={d === 0 ? `${p.repo}-${i}` : undefined}
                 onClick={() => onCardClick(i)}
                 interactive={visible}
               />
@@ -154,26 +158,34 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
         {activeProject?.title}, project {mod(active, count) + 1} of {count}
       </p>
 
-      <AnimatePresence>{opened && <ProjectModal key={opened.repo} project={opened} onClose={close} />}</AnimatePresence>
+      <AnimatePresence>
+        {opened && <ProjectModal key={opened.id} project={opened.project} layoutKey={opened.id} onClose={close} />}
+      </AnimatePresence>
     </div>
+    </MotionConfig>
   );
 }
 
 function ProjectCard({
   project: p,
   active,
+  layoutKey,
   onClick,
   interactive,
 }: {
   project: Project;
   active: boolean;
+  /** set on the centre card only: links it to the detail window for the morph */
+  layoutKey?: string;
   onClick: () => void;
   interactive: boolean;
 }) {
   return (
-    <div
+    <motion.div
+      layoutId={layoutKey && `card-${layoutKey}`}
+      style={{ borderRadius: 16 }}
       onClick={interactive ? onClick : undefined}
-      className={`group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border bg-surface transition-[border-color,box-shadow] duration-300 ${
+      className={`group flex h-full cursor-pointer flex-col overflow-hidden border bg-surface transition-[border-color,box-shadow] duration-300 ${
         active ? "border-line shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9),0_0_60px_-30px_var(--color-accent)]" : "border-line/60"
       }`}
     >
@@ -217,6 +229,6 @@ function ProjectCard({
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

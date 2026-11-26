@@ -8,8 +8,22 @@ import type { Project } from "@/lib/github";
 import ProjectCover from "./ProjectCover";
 
 /** A project opened in an app-window style dialog. */
-export default function ProjectModal({ project: p, onClose }: { project: Project; onClose: () => void }) {
+export default function ProjectModal({
+  project: p,
+  layoutKey,
+  onClose,
+}: {
+  project: Project;
+  /** matches the card it opened from, so the card morphs into this window */
+  layoutKey: string;
+  onClose: () => void;
+}) {
   const reduce = useReducedMotion();
+  // only the window outline morphs out of the card; its contents fade in once it has mostly grown,
+  // so nothing inside appears to slide or stretch
+  const fadeIn = reduce
+    ? {}
+    : { initial: { opacity: 0 }, animate: { opacity: 1, transition: { delay: 0.18, duration: 0.25 } }, exit: { opacity: 0, transition: { duration: 0.1 } } };
   const closeBtn = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -40,14 +54,13 @@ export default function ProjectModal({ project: p, onClose }: { project: Project
         role="dialog"
         aria-modal="true"
         aria-labelledby="project-modal-title"
-        initial={reduce ? false : { opacity: 0, scale: 0.92, y: 24 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={reduce ? undefined : { opacity: 0, scale: 0.95, y: 12 }}
-        transition={{ type: "spring", stiffness: 320, damping: 30 }}
-        className="relative flex max-h-[92svh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_40px_120px_-20px_rgb(0_0_0/0.9)]"
+        layoutId={`card-${layoutKey}`}
+        style={{ borderRadius: 16 }}
+        transition={{ type: "spring", stiffness: 260, damping: 30 }}
+        className="relative flex max-h-[92svh] w-full max-w-3xl flex-col overflow-hidden border border-line bg-surface shadow-[0_40px_120px_-20px_rgb(0_0_0/0.9)]"
       >
         {/* window title bar */}
-        <div className="relative flex h-11 shrink-0 items-center justify-center border-b border-line px-4">
+        <motion.div {...fadeIn} className="relative flex h-11 shrink-0 items-center justify-center border-b border-line px-4">
           <div aria-hidden className="absolute left-4 flex gap-2">
             <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
             <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
@@ -63,11 +76,11 @@ export default function ProjectModal({ project: p, onClose }: { project: Project
           >
             <LuX className="h-4 w-4" />
           </button>
-        </div>
+        </motion.div>
 
         {/* scrollable body */}
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <div className="relative h-56 overflow-hidden sm:h-80">
+          <motion.div {...fadeIn} className="relative h-56 overflow-hidden sm:h-80">
             <ProjectCover project={p} />
             <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-surface to-transparent" />
             {p.live && (
@@ -75,12 +88,17 @@ export default function ProjectModal({ project: p, onClose }: { project: Project
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" /> LIVE
               </span>
             )}
-          </div>
+          </motion.div>
 
           <div className="px-6 pt-4 pb-8 sm:px-8">
-            <h3 id="project-modal-title" className="font-display text-2xl font-bold tracking-tight text-fg sm:text-4xl">
+            <motion.h3
+              {...fadeIn}
+              id="project-modal-title"
+              className="font-display text-2xl font-bold tracking-tight text-fg sm:text-4xl"
+            >
               {p.title}
-            </h3>
+            </motion.h3>
+            <motion.div {...fadeIn}>
             <p className="mt-2 text-muted sm:text-lg">{p.tagline}</p>
 
             <ul className="mt-5 flex flex-wrap gap-2">
@@ -109,11 +127,12 @@ export default function ProjectModal({ project: p, onClose }: { project: Project
             ) : (
               <p className="mt-5 border-l border-line pl-5 text-muted">More details are on the GitHub repository.</p>
             )}
+            </motion.div>
           </div>
         </div>
 
         {/* footer actions */}
-        <div className="flex shrink-0 flex-wrap gap-3 border-t border-line bg-surface px-6 py-4 sm:px-8">
+        <motion.div {...fadeIn} className="flex shrink-0 flex-wrap gap-3 border-t border-line bg-surface px-6 py-4 sm:px-8">
           <a
             href={p.url}
             target="_blank"
@@ -132,7 +151,7 @@ export default function ProjectModal({ project: p, onClose }: { project: Project
               <LuExternalLink className="h-4 w-4" /> Live
             </a>
           )}
-        </div>
+        </motion.div>
       </motion.div>
     </motion.div>,
     document.body,

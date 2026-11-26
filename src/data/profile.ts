@@ -79,13 +79,46 @@ export const projectDetails: Record<
   "Intel-X": {
     title: "IntelX",
     tagline: "Security intelligence platform that aggregates 10+ external sources into one risk view.",
-    stack: ["React", "Python", "Flask", "Docker", "Redis", "AWS"],
+    stack: ["React", "Python", "Flask", "Docker", "Redis", "AWS", "Ghidra"],
     live: "https://intelx1337.vercel.app/",
     image: "/projects/intelx.jpg",
     points: [
-      "React front end backed by 5 independent Flask microservices for modular analysis workflows.",
+      "Modular platform bringing reconnaissance, malware inspection and threat intelligence together in one interface — a React front end backed by 5 independent Flask microservices.",
+      "Automated digital-footprint reconnaissance across public sources, aggregating usernames, emails and profiles and cutting manual OSINT effort by 70%+.",
+      "Malware analysis with Ghidra: binary disassembly and extraction of indicators of compromise (IOCs) into structured threat summaries.",
       "50+ REST endpoints integrating 10+ external services for automated aggregation and risk assessment.",
-      "Redis-based async job queues for concurrent processing; deployed on AWS with Docker Compose.",
+      "Redis-based async job queues for concurrent processing; containerised and deployed on AWS with Docker Compose.",
+    ],
+  },
+  "Threat-X": {
+    title: "Threat-X",
+    tagline: "Multi-scanner vulnerability pipeline that merges Nuclei, Nmap and OWASP ZAP findings and ranks them by real-world risk.",
+    stack: ["Python", "Nmap", "OWASP ZAP", "Nuclei", "Streamlit"],
+    points: [
+      "Vulnerability analysis pipeline integrating Nuclei, Nmap and OWASP ZAP, consolidating every finding into one unified schema.",
+      "Three-stage deduplication engine — deterministic, fuzzy (RapidFuzz) and optional Gemini-based semantic matching — to cut duplicate findings and false-positive noise.",
+      "Enriches CVEs with threat intelligence from NVD, CISA KEV, FIRST EPSS and Exploit-DB to prioritise by exploitability and risk.",
+      "Streamlit dashboard with risk breakdowns, remediation guidance and automatic GitHub Issue creation for vulnerability tracking.",
+    ],
+  },
+  NullRoute: {
+    tagline: "A custom Layer 2 VPN that tunnels Ethernet frames over UDP, joining distant machines into one virtual LAN.",
+    stack: ["C", "Python", "TAP interfaces", "UDP", "Linux networking"],
+    points: [
+      "Layer 2 VPN built with C, Python, TAP interfaces and raw sockets, tunnelling Ethernet frames over UDP across the internet.",
+      "Virtual switch with MAC address learning and frame forwarding, so geographically distributed devices share a single virtual LAN.",
+      "Tested across Fedora and Kali Linux KVM environments, troubleshooting NAT traversal and firewalld port blocking with Playit.gg.",
+      "Documented the network architecture and set up a multi-node KVM test environment to simulate distributed communication.",
+    ],
+  },
+  "Disk-Wipe": {
+    title: "Disk-Wipe",
+    tagline: "Linux data-sanitisation utility that securely erases files and drives using DoD 5220.22-M overwrite patterns.",
+    stack: ["Python", "Bash", "Linux", "Cryptography"],
+    points: [
+      "Secure data sanitisation utility for Linux in Python and Bash, implementing overwrite techniques based on DoD 5220.22-M patterns.",
+      "Multi-pass overwriting with zero-fill and random data patterns to sanitise files and storage sectors.",
+      "Automated sanitisation workflows for secure storage disposal and data protection across multiple devices.",
     ],
   },
   Neuralingo: {
@@ -112,4 +145,4 @@ export const projectDetails: Record<
 };
 
 /** The GitHub repos shown in the Projects section, in this order. Add a repo name here to show it. */
-export const featuredRepos = ["FlowGen", "Intel-X", "Neuralingo", "Factora"];
+export const featuredRepos = ["FlowGen", "Intel-X", "Threat-X", "Neuralingo", "NullRoute", "Factora", "Disk-Wipe"];
