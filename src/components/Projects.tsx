@@ -1,7 +1,7 @@
 import { LuGithub } from "react-icons/lu";
 import { profile } from "@/data/profile";
 import { getProjects } from "@/lib/github";
-import ProjectRing from "./ProjectRing";
+import ProjectCarousel from "./ProjectCarousel";
 import SectionHeading from "./SectionHeading";
 
 export default async function Projects() {
@@ -10,7 +10,7 @@ export default async function Projects() {
     <section id="projects" data-section className="overflow-hidden py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHeading title="Projects" subtitle="Pulled live from my GitHub — spin through them and open any card for the details" />
+          <SectionHeading title="Projects" subtitle="Pulled live from my GitHub — browse through them and open any project for the full story" />
           <a
             data-reveal="2"
             href={profile.github}
@@ -23,7 +23,7 @@ export default async function Projects() {
         </div>
       </div>
       <div data-reveal>
-        <ProjectRing projects={projects} />
+        <ProjectCarousel projects={projects} />
       </div>
     </section>
   );

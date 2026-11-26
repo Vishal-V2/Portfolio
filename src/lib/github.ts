@@ -1,4 +1,4 @@
-import { featuredRepos, hiddenRepos, profile, projectDetails } from "@/data/profile";
+import { featuredRepos, profile, projectDetails } from "@/data/profile";
 
 export type Project = {
   repo: string;
@@ -10,6 +10,7 @@ export type Project = {
   updated: string;
   url: string;
   live?: string;
+  image?: string;
   stack: string[];
   points: string[];
   topics: string[];
@@ -46,6 +47,7 @@ function toProject(r: Repo): Project {
     updated: r.pushed_at,
     url: r.html_url,
     live: d?.live ?? (r.homepage || undefined),
+    image: d?.image,
     stack: d?.stack ?? (r.language ? [r.language] : []),
     points: d?.points ?? [],
     topics: r.topics ?? [],
@@ -82,10 +84,11 @@ export async function getProjects(): Promise<Project[]> {
     );
     if (!res.ok) return fallback();
     const repos = (await res.json()) as Repo[];
-    const mine = repos.filter((r) => !r.fork && !r.archived && !hiddenRepos.includes(r.name));
-    const rank = (n: string) => (featuredRepos.includes(n) ? featuredRepos.indexOf(n) : featuredRepos.length);
-    return mine
-      .sort((a, b) => rank(a.name) - rank(b.name) || +new Date(b.pushed_at) - +new Date(a.pushed_at))
+    // only the projects listed in featuredRepos, in that order
+    const rank = (n: string) => featuredRepos.indexOf(n);
+    return repos
+      .filter((r) => rank(r.name) !== -1)
+      .sort((a, b) => rank(a.name) - rank(b.name))
       .map(toProject);
   } catch {
     return fallback();

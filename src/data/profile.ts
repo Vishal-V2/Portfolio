@@ -56,7 +56,15 @@ export const about = {
 /** Hand-written details layered on top of what GitHub returns, keyed by repo name. */
 export const projectDetails: Record<
   string,
-  { title?: string; tagline: string; stack: string[]; points: string[]; live?: string }
+  {
+    title?: string;
+    tagline: string;
+    stack: string[];
+    points: string[];
+    live?: string;
+    /** Screenshot in /public/projects — a generated cover is used when missing */
+    image?: string;
+  }
 > = {
   FlowGen: {
     tagline: "Visual workflow automation and web-scraping platform that runs pipelines as DAGs.",
@@ -73,6 +81,7 @@ export const projectDetails: Record<
     tagline: "Security intelligence platform that aggregates 10+ external sources into one risk view.",
     stack: ["React", "Python", "Flask", "Docker", "Redis", "AWS"],
     live: "https://intelx1337.vercel.app/",
+    image: "/projects/intelx.jpg",
     points: [
       "React front end backed by 5 independent Flask microservices for modular analysis workflows.",
       "50+ REST endpoints integrating 10+ external services for automated aggregation and risk assessment.",
@@ -102,7 +111,5 @@ export const projectDetails: Record<
   },
 };
 
-/** Repos to feature first, in this order. */
+/** The GitHub repos shown in the Projects section, in this order. Add a repo name here to show it. */
 export const featuredRepos = ["FlowGen", "Intel-X", "Neuralingo", "Factora"];
-/** Repos to leave off the site (empty, cloned or not yours to show). */
-export const hiddenRepos = ["Portfolio", "markitdown"];

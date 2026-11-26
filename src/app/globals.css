@@ -12,6 +12,7 @@
   --color-accent-bright: #34d399;
   --font-display: var(--font-sora);
   --font-sans: var(--font-jakarta);
+  --font-mono: var(--font-jbmono);
 }
 
 /* shadcn-style tokens, mapped onto the palette above so shadcn/ui components fit in */
